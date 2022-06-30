@@ -1,13 +1,9 @@
 name: 'e2e Tests'
 
 on:
-  workflow_call:
-    inputs:
-      pr-trigger:
-        description: 'True if tests were triggered by a PR'
-        default: false
-        required: true
-        type: boolean
+  push:
+    branches:
+      - master
 
 jobs:
   e2e:
@@ -25,37 +21,7 @@ jobs:
             password: DOCKERHUB_PASSWORD
             addLatest: true
             labels: org.opencontainers.image.description="A Hello World image used for e2e tests"
-
-          - name: GCR e2e
-            image: orbital-bank-301021/hello-world
-            dockerfile: ./e2e/Dockerfile
-            registry: gcr.io
-            username: GCR_USERNAME
-            password: GCR_PASSWORD
-            labels: org.opencontainers.image.description="A Hello World image used for e2e tests"
-
-          - name: ECR e2e
-            image: hello-world
-            dockerfile: ./e2e/test-build-dir/Dockerfile
-            directory: e2e/test-build-dir
-            registry: 026181534292.dkr.ecr.us-west-2.amazonaws.com
-            buildArgs: TEST=true
-
-          - name: GHCR Legacy e2e
-            image: docker-build-push/e2e-image
-            dockerfile: ./e2e/Dockerfile
-            registry: docker.pkg.github.com
-            username: GH_USERNAME
-            password: GITHUB_TOKEN
-
-          - name: GHCR e2e
-            image: hello-world
-            dockerfile: ./e2e/multi.Dockerfile
-            target: prod
-            registry: ghcr.io
-            githubOrg: docker-action-e2e
-            username: GHCR_USERNAME
-            password: GHCR_TOKEN
+            buildArgs: TEST1=SOMETHING1, TEST2=SOMETHING2
 
     steps:
       - name: Check out code current branch
